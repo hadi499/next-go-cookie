@@ -47,7 +47,8 @@ const LoginPage = () => {
       setLoading(false);
       router.refresh();
     } catch (err) {
-      setError("Terjadi kesalahan saat menghubungi server");
+      setError("username or password wrong!");
+      setLoading(false);
     }
   };
   return (

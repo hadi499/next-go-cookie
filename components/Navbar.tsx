@@ -13,7 +13,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     localStorage.removeItem("userInfo");
-    await fetch("api/logout", {
+    await fetch("/api/logout", {
       method: "GET",
       credentials: "include",
     });
@@ -72,6 +72,12 @@ export default function Navbar() {
               className="text-gray-800 text-lg hover:text-indigo-700 transition-colors"
             >
               Products
+            </Link>
+            <Link
+              href={`/profile/${user.user_id}`}
+              className="text-gray-800 text-lg hover:text-indigo-700 transition-colors"
+            >
+              Profile
             </Link>
             <button
               onClick={handleLogout}

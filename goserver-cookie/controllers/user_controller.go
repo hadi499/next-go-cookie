@@ -16,6 +16,7 @@ import (
 type UserResponse struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 var validate = validator.New()
@@ -107,12 +108,13 @@ func Login(c *gin.Context) {
 	}
 
 	// Set token in cookie
-	expiry := 3 * 60 //24 * 60 * 60 = 24jam
+	expiry := 60 * 60 //24 * 60 * 60 = 24jam
 	c.SetCookie("token", tokenString, expiry, "/", "localhost", false, true)
 	// Gunakan struct UserResponse untuk response tanpa password
 	userResponse := UserResponse{
 		Id:       dbUser.Id.String(),
 		Username: dbUser.Username,
+		Email:    dbUser.Email,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -163,7 +165,13 @@ func GetProfile(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	userResponse := UserResponse{
+		Id:       user.Id.String(),
+		Username: user.Username,
+		Email:    user.Email,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"user": userResponse})
 }
 
 // UpdateProfile - Memperbarui profil pengguna
@@ -214,6 +222,11 @@ func UpdateProfile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update profile"})
 		return
 	}
+	userResponse := UserResponse{
+		Id:       user.Id.String(),
+		Username: user.Username,
+		Email:    user.Email,
+	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Profile updated successfully", "user": user})
+	c.JSON(http.StatusOK, gin.H{"message": "Profile updated successfully", "user": userResponse})
 }
